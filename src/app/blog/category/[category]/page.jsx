@@ -102,10 +102,7 @@ export default function BlogPage() {
                           ? new Date(post.date).toLocaleDateString("ar-EG")
                           : "جديد"}
                       </span>
-                      <span className="flex items-center gap-1.5">
-                        <FiClock size={13} />
-                        {post.readingTime || 3} د
-                      </span>
+                      
                       <span className="flex items-center gap-1.5 text-[var(--primary)]">
                         <FiArrowLeft size={13} />
                         <span className="text-[10px]">اقرأ</span>
