@@ -131,27 +131,27 @@ export default function VisitorsPage() {
           <table className="w-full">
             <thead className="bg-[var(--background)] border-b border-[var(--nav-border])">
               <tr>
-                <th className="p-3 text-right text-xs font-medium text-[var(--text-muted)] uppercase tracking-wider">
+                <th className="p-3.5 text-right text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-[0.12em]">
                   المعرف
                 </th>
-                <th className="p-3 text-right text-xs font-medium text-[var(--text-muted)] uppercase tracking-wider">
+                <th className="p-3.5 text-right text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-[0.12em]">
                   المتصفح / الجهاز
                 </th>
-                <th className="p-3 text-right text-xs font-medium text-[var(--text-muted)] uppercase tracking-wider">
+                <th className="p-3.5 text-right text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-[0.12em]">
                   نظام التشغيل
                 </th>
-                <th className="p-3 text-right text-xs font-medium text-[var(--text-muted)] uppercase tracking-wider">
+                <th className="p-3.5 text-right text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-[0.12em]">
                   الإيميل
                 </th>
-                <th className="p-3 text-right text-xs font-medium text-[var(--text-muted)] uppercase tracking-wider">
+                <th className="p-3.5 text-right text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-[0.12em]">
                   الزيارات
                 </th>
-                <th className="p-3 text-right text-xs font-medium text-[var(--text-muted)] uppercase tracking-wider">
+                <th className="p-3.5 text-right text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-[0.12em]">
                   آخر زيارة
                 </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[var(--nav-border])">
+            <tbody className="divide-y divide-[var(--nav-border)]/80">
               {filteredVisitors.length === 0 ? (
                 <tr>
                   <td
@@ -165,39 +165,39 @@ export default function VisitorsPage() {
                 filteredVisitors.map((v) => (
                   <tr
                     key={v.id}
-                    className="hover:bg-[var(--background)]/30 transition-colors"
+                    className="hover:bg-[var(--background)]/30 transition-colors duration-200"
                   >
-                    <td className="p-3">
-                      <p className="font-mono text-xs text-[var(--text-muted)]">
+                    <td className="p-3.5 align-middle">
+                      <p className="font-mono text-[11px] text-[var(--text-muted)]">
                         {v.visitor_id?.slice(0, 20)}...
                       </p>
                     </td>
-                    <td className="p-3">
+                    <td className="p-3.5 align-middle">
                       <div className="flex items-center gap-2">
                         <FiMonitor
                           className="text-[var(--text-muted)]"
                           size={14}
                         />
-                        <span className="text-sm text-[var(--foreground)]">
+                        <span className="text-sm font-medium text-[var(--foreground)]">
                           {v.browser || "غير معروف"}
                         </span>
                       </div>
-                      <p className="text-xs text-[var(--text-muted)]">
+                      <p className="mt-1 text-xs text-[var(--text-muted)]">
                         {v.device || "Desktop"}
                       </p>
                     </td>
-                    <td className="p-3 text-sm text-[var(--foreground)]">
+                    <td className="p-3.5 align-middle text-sm text-[var(--foreground)]">
                       {v.os || "غير معروف"}
                     </td>
-                    <td className="p-3 text-sm text-[var(--foreground)]">
+                    <td className="p-3.5 align-middle text-sm text-[var(--foreground)]">
                       {v.email || (
                         <span className="text-[var(--text-muted)]">-</span>
                       )}
                     </td>
-                    <td className="p-3 text-sm font-bold text-[var(--foreground)]">
+                    <td className="p-3.5 align-middle text-sm font-bold text-[var(--foreground)]">
                       {v.visit_count || 1}
                     </td>
-                    <td className="p-3 text-sm text-[var(--text-muted)]">
+                    <td className="p-3.5 align-middle text-sm text-[var(--text-muted)]">
                       {v.last_visit
                         ? new Date(v.last_visit).toLocaleDateString("ar-EG")
                         : "-"}

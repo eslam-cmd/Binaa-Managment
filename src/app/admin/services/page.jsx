@@ -377,30 +377,30 @@ export default function ServicesPage() {
           <table className="w-full">
             <thead className="bg-[var(--background)] border-b border-[var(--nav-border])">
               <tr>
-                <th className="p-3 text-right text-xs font-medium text-[var(--text-muted)] uppercase tracking-wider">
+                <th className="p-3.5 text-right text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-[0.12em]">
                   الرمز
                 </th>
-                <th className="p-3 text-right text-xs font-medium text-[var(--text-muted)] uppercase tracking-wider">
+                <th className="p-3.5 text-right text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-[0.12em]">
                   الخدمة
                 </th>
-                <th className="p-3 text-right text-xs font-medium text-[var(--text-muted)] uppercase tracking-wider">
+                <th className="p-3.5 text-right text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-[0.12em]">
                   السعر
                 </th>
-                <th className="p-3 text-right text-xs font-medium text-[var(--text-muted)] uppercase tracking-wider">
+                <th className="p-3.5 text-right text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-[0.12em]">
                   الميزات
                 </th>
-                <th className="p-3 text-right text-xs font-medium text-[var(--text-muted)] uppercase tracking-wider">
+                <th className="p-3.5 text-right text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-[0.12em]">
                   الحالة
                 </th>
-                <th className="p-3 text-right text-xs font-medium text-[var(--text-muted)] uppercase tracking-wider">
+                <th className="p-3.5 text-right text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-[0.12em]">
                   مميزة
                 </th>
-                <th className="p-3 text-center text-xs font-medium text-[var(--text-muted)] uppercase tracking-wider">
+                <th className="p-3.5 text-center text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-[0.12em]">
                   الإجراءات
                 </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[var(--nav-border)]">
+            <tbody className="divide-y divide-[var(--nav-border)]/80">
               {services.map((service) => (
                 <tr
                   key={service.id}

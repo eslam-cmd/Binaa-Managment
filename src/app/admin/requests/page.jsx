@@ -161,27 +161,27 @@ export default function RequestsPage() {
           <table className="w-full">
             <thead className="bg-[var(--background)] border-b border-[var(--nav-border])">
               <tr>
-                <th className="p-3 text-right text-xs font-medium text-[var(--text-muted)] uppercase tracking-wider">
+                <th className="p-3.5 text-right text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-[0.12em]">
                   #ID
                 </th>
-                <th className="p-3 text-right text-xs font-medium text-[var(--text-muted)] uppercase tracking-wider">
+                <th className="p-3.5 text-right text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-[0.12em]">
                   العميل
                 </th>
-                <th className="p-3 text-right text-xs font-medium text-[var(--text-muted)] uppercase tracking-wider">
+                <th className="p-3.5 text-right text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-[0.12em]">
                   المشروع
                 </th>
-                <th className="p-3 text-right text-xs font-medium text-[var(--text-muted)] uppercase tracking-wider">
+                <th className="p-3.5 text-right text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-[0.12em]">
                   الحالة
                 </th>
-                <th className="p-3 text-right text-xs font-medium text-[var(--text-muted)] uppercase tracking-wider">
+                <th className="p-3.5 text-right text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-[0.12em]">
                   التاريخ
                 </th>
-                <th className="p-3 text-center text-xs font-medium text-[var(--text-muted)] uppercase tracking-wider">
+                <th className="p-3.5 text-center text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-[0.12em]">
                   الإجراءات
                 </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[var(--nav-border])">
+            <tbody className="divide-y divide-[var(--nav-border)]/80">
               {filteredRequests.length === 0 ? (
                 <tr>
                   <td
@@ -195,35 +195,35 @@ export default function RequestsPage() {
                 filteredRequests.map((req) => (
                   <tr
                     key={req.id}
-                    className="hover:bg-[var(--background)]/30 transition-colors"
+                    className="hover:bg-[var(--background)]/30 transition-colors duration-200"
                   >
-                    <td className="p-3 text-sm font-mono text-[var(--text-muted)]">
+                    <td className="p-3.5 align-middle text-sm font-mono text-[var(--text-muted)]">
                       #{String(req.id).padStart(4, "0")}
                     </td>
-                    <td className="p-3">
-                      <p className="font-medium text-[var(--foreground)]">
+                    <td className="p-3.5 align-middle">
+                      <p className="font-semibold text-[var(--foreground)]">
                         {req.name}
                       </p>
-                      <p className="text-xs text-[var(--text-muted)]">
+                      <p className="mt-1 text-xs text-[var(--text-muted)]">
                         {req.email}
                       </p>
                     </td>
-                    <td className="p-3">
-                      <span className="px-2 py-1 rounded-full text-[10px] bg-[var(--primary)]/10 text-[var(--primary)]">
+                    <td className="p-3.5 align-middle">
+                      <span className="inline-flex items-center rounded-full border border-[var(--primary)]/20 bg-[var(--primary)]/10 px-2.5 py-1 text-[10px] font-medium text-[var(--primary)]">
                         {req.project_type}
                       </span>
                     </td>
-                    <td className="p-3">
+                    <td className="p-3.5 align-middle">
                       <span
-                        className={`px-2 py-1 rounded-full text-[10px] font-medium ${statusColors[req.status]}`}
+                        className={`inline-flex items-center rounded-full px-2.5 py-1 text-[10px] font-semibold ${statusColors[req.status]}`}
                       >
                         {statusLabels[req.status]}
                       </span>
                     </td>
-                    <td className="p-3 text-sm text-[var(--text-muted)]">
+                    <td className="p-3.5 align-middle text-sm text-[var(--text-muted)]">
                       {new Date(req.created_at).toLocaleDateString("ar-EG")}
                     </td>
-                    <td className="p-3">
+                    <td className="p-3.5 align-middle">
                       <div className="flex items-center justify-center gap-2">
                         <button
                           onClick={() => {
@@ -232,7 +232,7 @@ export default function RequestsPage() {
                             );
                             setNotes("");
                           }}
-                          className="p-1.5 rounded-lg bg-[var(--primary)]/10 text-[var(--primary)] hover:bg-[var(--primary)]/20 transition-colors"
+                          className="flex h-8 w-8 items-center justify-center rounded-lg border border-[var(--primary)]/20 bg-[var(--primary)]/10 text-[var(--primary)] transition hover:bg-[var(--primary)]/20"
                         >
                           <FiEye size={16} />
                         </button>
@@ -242,7 +242,7 @@ export default function RequestsPage() {
                               onClick={() =>
                                 handleStatusChange(req.id, "accepted")
                               }
-                              className="p-1.5 rounded-lg bg-emerald-500/10 text-emerald-500 hover:bg-emerald-500/20 transition-colors"
+                              className="flex h-8 w-8 items-center justify-center rounded-lg border border-emerald-500/20 bg-emerald-500/10 text-emerald-500 transition hover:bg-emerald-500/20"
                             >
                               <FiCheck size={16} />
                             </button>
@@ -250,7 +250,7 @@ export default function RequestsPage() {
                               onClick={() =>
                                 handleStatusChange(req.id, "rejected")
                               }
-                              className="p-1.5 rounded-lg bg-red-500/10 text-red-500 hover:bg-red-500/20 transition-colors"
+                              className="flex h-8 w-8 items-center justify-center rounded-lg border border-red-500/20 bg-red-500/10 text-red-500 transition hover:bg-red-500/20"
                             >
                               <FiX size={16} />
                             </button>

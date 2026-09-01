@@ -109,24 +109,24 @@ export default function PostsPage() {
           <table className="w-full">
             <thead className="bg-[var(--background)] border-b border-[var(--nav-border])">
               <tr>
-                <th className="p-3 text-right text-xs font-medium text-[var(--text-muted)] uppercase tracking-wider">
+                <th className="p-3.5 text-right text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-[0.12em]">
                   العنوان
                 </th>
-                <th className="p-3 text-right text-xs font-medium text-[var(--text-muted)] uppercase tracking-wider">
+                <th className="p-3.5 text-right text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-[0.12em]">
                   التصنيف
                 </th>
-                <th className="p-3 text-right text-xs font-medium text-[var(--text-muted)] uppercase tracking-wider">
+                <th className="p-3.5 text-right text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-[0.12em]">
                   المشاهدات
                 </th>
-                <th className="p-3 text-right text-xs font-medium text-[var(--text-muted)] uppercase tracking-wider">
+                <th className="p-3.5 text-right text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-[0.12em]">
                   التاريخ
                 </th>
-                <th className="p-3 text-center text-xs font-medium text-[var(--text-muted)] uppercase tracking-wider">
+                <th className="p-3.5 text-center text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-[0.12em]">
                   الإجراءات
                 </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[var(--nav-border])">
+            <tbody className="divide-y divide-[var(--nav-border)]/80">
               {posts.length === 0 ? (
                 <tr>
                   <td
@@ -140,47 +140,47 @@ export default function PostsPage() {
                 posts.map((post) => (
                   <tr
                     key={post.id}
-                    className="hover:bg-[var(--background)]/30 transition-colors"
+                    className="hover:bg-[var(--background)]/30 transition-colors duration-200"
                   >
-                    <td className="p-3">
-                      <p className="font-medium text-[var(--foreground)] line-clamp-1">
+                    <td className="p-3.5 align-middle">
+                      <p className="font-semibold text-[var(--foreground)] line-clamp-1">
                         {post.title}
                       </p>
                       {post.excerpt && (
-                        <p className="text-xs text-[var(--text-muted)] line-clamp-1">
+                        <p className="mt-1 text-xs text-[var(--text-muted)] line-clamp-1">
                           {post.excerpt}
                         </p>
                       )}
                     </td>
-                    <td className="p-3">
-                      <span className="px-2 py-1 rounded-full text-[10px] bg-[var(--primary)]/10 text-[var(--primary)]">
+                    <td className="p-3.5 align-middle">
+                      <span className="inline-flex items-center rounded-full border border-[var(--primary)]/20 bg-[var(--primary)]/10 px-2.5 py-1 text-[10px] font-medium text-[var(--primary)]">
                         {post.category || "غير مصنف"}
                       </span>
                     </td>
-                    <td className="p-3 text-sm text-[var(--foreground)]">
+                    <td className="p-3.5 align-middle text-sm font-medium text-[var(--foreground)]">
                       {post.views || 0}
                     </td>
-                    <td className="p-3 text-sm text-[var(--text-muted)]">
+                    <td className="p-3.5 align-middle text-sm text-[var(--text-muted)]">
                       {new Date(post.created_at).toLocaleDateString("ar-EG")}
                     </td>
-                    <td className="p-3">
+                    <td className="p-3.5 align-middle">
                       <div className="flex items-center justify-center gap-2">
                         <Link
                           href={`/blog/${post.slug}`}
                           target="_blank"
-                          className="p-1.5 rounded-lg bg-[var(--primary)]/10 text-[var(--primary)] hover:bg-[var(--primary)]/20 transition-colors"
+                          className="flex h-8 w-8 items-center justify-center rounded-lg border border-[var(--primary)]/20 bg-[var(--primary)]/10 text-[var(--primary)] transition hover:bg-[var(--primary)]/20"
                         >
                           <FiEye size={16} />
                         </Link>
                         <Link
                           href={`/admin/posts/${post.id}`}
-                          className="p-1.5 rounded-lg bg-yellow-500/10 text-yellow-500 hover:bg-yellow-500/20 transition-colors"
+                          className="flex h-8 w-8 items-center justify-center rounded-lg border border-yellow-500/20 bg-yellow-500/10 text-yellow-500 transition hover:bg-yellow-500/20"
                         >
                           <FiEdit2 size={16} />
                         </Link>
                         <button
                           onClick={() => handleDelete(post.id)}
-                          className="p-1.5 rounded-lg bg-red-500/10 text-red-500 hover:bg-red-500/20 transition-colors"
+                          className="flex h-8 w-8 items-center justify-center rounded-lg border border-red-500/20 bg-red-500/10 text-red-500 transition hover:bg-red-500/20"
                         >
                           <FiTrash2 size={16} />
                         </button>
