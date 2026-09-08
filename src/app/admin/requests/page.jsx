@@ -17,6 +17,8 @@ export default function RequestsPage() {
   const [filter, setFilter] = useState("all");
   const [selectedRequest, setSelectedRequest] = useState(null);
   const [notes, setNotes] = useState("");
+  const [projectEndDate, setProjectEndDate] = useState("");
+  const [followUpMessage, setFollowUpMessage] = useState("");
   const [message, setMessage] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -39,13 +41,24 @@ export default function RequestsPage() {
 
   const handleStatusChange = async (id, status) => {
     try {
-      await updateRequestStatus(id, status, notes);
+      await updateRequestStatus(
+        id,
+        status,
+        notes,
+        projectEndDate,
+        followUpMessage,
+      );
       setMessage({
         type: "success",
-        text: `تم تحديث حالة الطلب إلى ${status}`,
+        text:
+          followUpMessage && status !== "pending"
+            ? `تم تحديث حالة الطلب وإرسال رسالة المتابعة`
+            : `تم تحديث حالة الطلب إلى ${status}`,
       });
       setSelectedRequest(null);
       setNotes("");
+      setProjectEndDate("");
+      setFollowUpMessage("");
       fetchRequests();
     } catch (error) {
       setMessage({ type: "error", text: error.message || "حدث خطأ" });
@@ -230,7 +243,15 @@ export default function RequestsPage() {
                             setSelectedRequest(
                               selectedRequest === req.id ? null : req.id,
                             );
-                            setNotes("");
+                            setNotes(req.notes || "");
+                            setProjectEndDate(
+                              req.project_end_date
+                                ? new Date(req.project_end_date)
+                                    .toISOString()
+                                    .slice(0, 10)
+                                : "",
+                            );
+                            setFollowUpMessage("");
                           }}
                           className="flex h-8 w-8 items-center justify-center rounded-lg border border-[var(--primary)]/20 bg-[var(--primary)]/10 text-[var(--primary)] transition hover:bg-[var(--primary)]/20"
                         >
@@ -337,34 +358,109 @@ export default function RequestsPage() {
                     </div>
                   )}
 
-                  {req.status === "pending" && (
+                  <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
                     <div>
-                      <p className="text-xs text-[var(--text-muted)] mb-1">
-                        ملاحظات إضافية
-                      </p>
-                      <textarea
-                        value={notes}
-                        onChange={(e) => setNotes(e.target.value)}
-                        rows={3}
-                        className="w-full rounded-xl bg-[var(--background)] border border-[var(--nav-border)] px-4 py-3 text-sm text-[var(--foreground)] placeholder:text-[var(--text-muted)] focus:outline-none focus:border-[var(--primary)] resize-none"
-                        placeholder="أضف ملاحظات (اختياري)..."
+                      <label className="text-xs text-[var(--text-muted)] block mb-1">
+                        تاريخ نهاية المشروع
+                      </label>
+                      <input
+                        type="date"
+                        value={projectEndDate}
+                        onChange={(e) => setProjectEndDate(e.target.value)}
+                        className="w-full rounded-xl bg-[var(--background)] border border-[var(--nav-border)] px-4 py-2 text-sm text-[var(--foreground)] focus:outline-none focus:border-[var(--primary)]"
                       />
-                      <div className="flex gap-2 mt-3">
-                        <button
-                          onClick={() => handleStatusChange(req.id, "accepted")}
-                          className="flex-1 py-2 rounded-xl bg-emerald-500 text-white text-sm font-medium hover:bg-emerald-600 transition-colors"
-                        >
-                          قبول الطلب
-                        </button>
-                        <button
-                          onClick={() => handleStatusChange(req.id, "rejected")}
-                          className="flex-1 py-2 rounded-xl bg-red-500 text-white text-sm font-medium hover:bg-red-600 transition-colors"
-                        >
-                          رفض الطلب
-                        </button>
+                    </div>
+                    <div>
+                      <label className="text-xs text-[var(--text-muted)] block mb-1">
+                        آخر حالة
+                      </label>
+                      <div className="rounded-xl bg-[var(--background)] border border-[var(--nav-border)] px-4 py-2 text-sm text-[var(--foreground)]">
+                        {req.project_end_date
+                          ? new Date(req.project_end_date).toLocaleDateString(
+                              "ar-EG",
+                            )
+                          : "غير محدد"}
                       </div>
                     </div>
-                  )}
+                  </div>
+
+                  <div>
+                    <p className="text-xs text-[var(--text-muted)] mb-1">
+                      ملاحظات إضافية
+                    </p>
+                    <textarea
+                      value={notes}
+                      onChange={(e) => setNotes(e.target.value)}
+                      rows={3}
+                      className="w-full rounded-xl bg-[var(--background)] border border-[var(--nav-border)] px-4 py-3 text-sm text-[var(--foreground)] placeholder:text-[var(--text-muted)] focus:outline-none focus:border-[var(--primary)] resize-none"
+                      placeholder="أضف ملاحظات (اختياري)..."
+                    />
+                  </div>
+
+                  <div>
+                    <p className="text-xs text-[var(--text-muted)] mb-1">
+                      رسالة متابعة (اختيارية)
+                    </p>
+                    <textarea
+                      value={followUpMessage}
+                      onChange={(e) => setFollowUpMessage(e.target.value)}
+                      rows={3}
+                      className="w-full rounded-xl bg-[var(--background)] border border-[var(--nav-border)] px-4 py-3 text-sm text-[var(--foreground)] placeholder:text-[var(--text-muted)] focus:outline-none focus:border-[var(--primary)] resize-none"
+                      placeholder="اكتب رسالة ستُرسل إلى البريد الإلكتروني للعميل مع تحديث الحالة..."
+                    />
+                  </div>
+
+                  {Array.isArray(req.message_history) &&
+                    req.message_history.length > 0 && (
+                      <div>
+                        <p className="text-xs text-[var(--text-muted)] mb-2">
+                          سجل الرسائل
+                        </p>
+                        <div className="space-y-2 max-h-52 overflow-y-auto pr-1">
+                          {req.message_history.map((item) => (
+                            <div
+                              key={
+                                item.id || `${item.sent_at}-${Math.random()}`
+                              }
+                              className="rounded-xl border border-[var(--nav-border)] bg-[var(--background)] p-3"
+                            >
+                              <div className="flex items-center justify-between gap-2 mb-1">
+                                <span className="text-xs font-medium text-[var(--foreground)]">
+                                  {item.sender === "admin"
+                                    ? "الإدارة"
+                                    : "العميل"}
+                                </span>
+                                <span className="text-[10px] text-[var(--text-muted)]">
+                                  {item.sent_at
+                                    ? new Date(item.sent_at).toLocaleString(
+                                        "ar-EG",
+                                      )
+                                    : ""}
+                                </span>
+                              </div>
+                              <p className="text-sm text-[var(--foreground)] whitespace-pre-line">
+                                {item.message}
+                              </p>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                  <div className="flex gap-2 mt-3">
+                    <button
+                      onClick={() => handleStatusChange(req.id, "accepted")}
+                      className="flex-1 py-2 rounded-xl bg-emerald-500 text-white text-sm font-medium hover:bg-emerald-600 transition-colors"
+                    >
+                      قبول الطلب
+                    </button>
+                    <button
+                      onClick={() => handleStatusChange(req.id, "rejected")}
+                      className="flex-1 py-2 rounded-xl bg-red-500 text-white text-sm font-medium hover:bg-red-600 transition-colors"
+                    >
+                      رفض الطلب
+                    </button>
+                  </div>
                 </div>
               ))}
           </div>

@@ -119,10 +119,21 @@ export async function getRequests(status = "") {
   return data.requests || [];
 }
 
-export async function updateRequestStatus(id, status, notes = "") {
+export async function updateRequestStatus(
+  id,
+  status,
+  notes = "",
+  projectEndDate = "",
+  followUpMessage = "",
+) {
   const data = await fetchAPI(`/requests/${id}/status`, {
     method: "PUT",
-    body: JSON.stringify({ status, notes }),
+    body: JSON.stringify({
+      status,
+      notes,
+      project_end_date: projectEndDate,
+      follow_up_message: followUpMessage,
+    }),
   });
   return data.request;
 }
