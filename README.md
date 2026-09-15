@@ -1,30 +1,32 @@
-# Frontend Documentation
+# Freelance Platform — Frontend Client
 
-## نظرة عامة
+[![Next.js](https://img.shields.io/badge/Next.js-000000?logo=next.js&logoColor=white)](https://nextjs.org)
+[![React](https://img.shields.io/badge/React-61DAFB?logo=react&logoColor=black)](https://react.dev)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-06B6D4?logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
+[![TypeScript](https://img.shields.io/badge/JavaScript-F7DF1E?logo=javascript&logoColor=black)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
 
-هذا المشروع هو الواجهة الأمامية لمنصة العمل الحر/الاستشارات، مبني باستخدام Next.js 16 App Router مع React 19. المشروع يدعم:
+A modern, responsive frontend for a freelance/consulting platform built with Next.js 16 App Router and React 19. Features a public-facing website, blog, admin dashboard, and full content management system.
 
-- صفحة رئيسية للموقع العام
-- صفحة المدونة
-- صفحة تسجيل الدخول للإدارة
-- لوحة التحكم للإدارة
-- إدارة الخدمات والطلبات والمقالات
-- استخدام جلسة المصادقة عبر cookies
+> 🔗 Backend repository: [Freelance Platform — Backend API](https://github.com/eslam-cmd/freelance-server)
 
-## التقنية المستخدمة
+---
 
-- Next.js 16
-- React 19
-- App Router
-- Tailwind CSS
-- react-icons
-- react-markdown
-- gray-matter
-- PostgreSQL via backend API
+## 🛠️ Tech Stack
 
-## هيكل المشروع
+| Technology | Purpose |
+| :--- | :--- |
+| **Next.js 16** | React framework with App Router |
+| **React 19** | UI component library |
+| **Tailwind CSS** | Utility-first styling |
+| **react-icons** | Icon library |
+| **react-markdown** | Markdown rendering |
+| **gray-matter** | Markdown frontmatter parsing |
 
-```bash
+---
+
+## 📁 Project Structure
+
+```text
 client/
 ├── public/
 ├── src/
@@ -67,345 +69,182 @@ client/
 │   │   └── posts/
 │   ├── context/
 │   │   └── AuthContext.jsx
-│   ├── lib/
-│   │   ├── api.js
-│   │   ├── constants.js
-│   │   └── posts.js
-│   └── app/...
+│   └── lib/
+│       ├── api.js
+│       ├── constants.js
+│       └── posts.js
 ├── package.json
 ├── next.config.mjs
 ├── jsconfig.json
 ├── postcss.config.mjs
 ├── eslint.config.mjs
-├── README.md
-└── .env.local
+└── README.md
 ```
 
-## نقطة التشغيل
+---
 
-الـ app الرئيسي يعمل على Next.js، ومشغل فعليًا عبر:
+## 🚀 Getting Started
+
+### Prerequisites
+
+- Node.js >= 18
+- Backend API running (see backend repo)
+
+### Installation
 
 ```bash
-npm run dev
-```
-
-ويكون الوصول الافتراضي على:
-
-```text
-http://localhost:3000
-```
-
-## التشغيل المحلي
-
-1. تثبيت الحزم
-
-```bash
+# Clone the repository
+git clone https://github.com/eslam-cmd/freelance-client.git
 cd client
+
+# Install dependencies
 npm install
 ```
 
-2. إعداد متغيرات البيئة
-   أنشئ ملف `.env.local` داخل مجلد `client/`:
+### Environment Configuration
+
+Create a `.env.local` file inside the `client/` directory:
 
 ```env
 NEXT_PUBLIC_API_URL=http://localhost:5001/api
 ```
 
-3. تشغيل المشروع
+### Run the Application
 
 ```bash
+# Development
 npm run dev
-```
 
-4. إنشاء نسخة إنتاجية
-
-```bash
+# Production build
 npm run build
 npm run start
 ```
 
-## نظام المصادقة في الـ Frontend
+App runs at `http://localhost:3000`
 
-المصادقة يتم التحقق منها عبر `AuthContext` داخل:
+---
+
+## ✨ Key Features
+
+### Public Website
+- **Hero Section** — Landing page with call-to-action
+- **Services** — Available service listings
+- **Process** — How it works walkthrough
+- **Pricing** — Plan comparison
+- **Blog** — Markdown-powered blog with category filtering
+
+### Admin Dashboard (`/admin`)
+- **Statistics** — Request, service, and post counters
+- **Requests Management** — View and update client request status
+- **Services Management** — Full CRUD with icon and category selection
+- **Posts Management** — Create and manage blog content
+- **Activity Log** — Real-time admin action history
+- **Visitor Tracking** — Monitor platform visitors
+
+---
+
+## 🔐 Authentication
+
+Authentication is session-based using HTTP-only cookies, managed via `AuthContext`:
 
 ```bash
 src/context/AuthContext.jsx
 ```
 
-### مبدأ العمل
+**Flow:**
+1. User submits email + password → OTP sent via email
+2. User enters OTP → Session created
+3. `checkAuth()` validates session on every page load
+4. Unauthenticated users are redirected to `/login`
 
-- عند فتح الصفحة، `checkAuth()` يطلب من السيرفر `/api/auth/session`
-- إذا كانت الجلسة صالحة، يتم تعيين `user`
-- إذا لم تكن الجلسة صالحة، يتم توجيه المستخدم إلى `/login`
-- في صفحة تسجيل الدخول، بعد نجاح OTP يتم التوجيه مباشرة إلى `/admin`
+**Context values:**
+- `user` — Authenticated user object
+- `loading` — Auth check state
+- `checkAuth()` — Validates current session
+- `logout()` — Clears session
 
-## الصفحات الأساسية
+---
 
-### 1) الصفحة العامة
+## 🗺️ Pages
 
-مسار:
+| Route | Description |
+| :--- | :--- |
+| `/` | Public homepage |
+| `/login` | Admin login with OTP verification |
+| `/admin` | Dashboard with stats and activity |
+| `/admin/services` | Service management |
+| `/admin/requests` | Client request management |
+| `/admin/posts` | Blog post management |
+| `/admin/visitors` | Visitor analytics |
+| `/blog` | Blog listing |
+| `/blog/[slug]` | Single blog post |
+| `/blog/category/[category]` | Posts by category |
 
-```text
-/
-```
+---
 
-تحتوي على الواجهة العامة للمشروع مثل:
+## 📡 API Client
 
-- Hero
-- Services
-- Process
-- TrustBar
-- Pricing
-- Footer
-
-### 2) صفحة تسجيل الدخول
-
-مسار:
-
-```text
-/login
-```
-
-تدعم:
-
-- إدخال البريد الإلكتروني
-- إدخال كلمة المرور
-- إرسال OTP
-- التحقق من الرمز
-- توجيه تلقائي بعد تسجيل الدخول
-
-### 3) لوحة التحكم
-
-مسار:
-
-```text
-/admin
-```
-
-تحتوي على:
-
-- إحصائيات
-- آخر الطلبات
-- آخر المقالات
-- سجل النشاطات
-- آراء العملاء والتقييمات
-
-### 4) إدارة الخدمات
-
-مسار:
-
-```text
-/admin/services
-```
-
-تدعم:
-
-- إضافة خدمة جديدة
-- تعديل الخدمة
-- حذف الخدمة
-- حالة النشاط
-- التمييز
-- اختيار الأيقونة من قائمة منسدلة
-- اختيار الفئة من قائمة منسدلة
-
-### 5) المدونة
-
-مسارات:
-
-```text
-/blog
-/blog/[slug]
-/blog/category/[category]
-```
-
-تستخدم ملفات Markdown داخل:
-
-```bash
-src/content/posts/
-```
-
-## مكتبة الـ API في الـ Frontend
-
-الـ API wrapper الرئيسي موجود داخل:
-
-```bash
-src/lib/api.js
-```
-
-تغطي هذه المكتبة:
-
-- login
-- verifyOTP
-- checkSession
-- logout
-- getPosts
-- getServices
-- createService
-- updateService
-- deleteService
-- getRequests
-- getStats
-- getActivities
-
-### مثال استخدام
+All API calls are handled through `src/lib/api.js`:
 
 ```js
 import { getServices, createService } from "@/lib/api";
 
 const services = await getServices();
+
 const newService = await createService({
-  name: "خدمة جديدة",
+  name: "New Service",
   price: 500,
-  category: "برمجة",
+  category: "development",
   emoji: "💻",
 });
 ```
 
-## حالة المصادقة في الـ Frontend
+**Available methods:**
+- `login` / `verifyOTP` / `checkSession` / `logout`
+- `getPosts` / `getServices` / `getRequests`
+- `createService` / `updateService` / `deleteService`
+- `getStats` / `getActivities`
 
-### `AuthContext`
-
-ملف:
-
-```bash
-src/context/AuthContext.jsx
+All requests include:
+```js
+credentials: "include"   // for session cookies
+Content-Type: "application/json"
 ```
 
-يحتوي على:
+---
 
-- `user`
-- `loading`
-- `checkAuth()`
-- `logout()`
+## 🎨 Key Components
 
-### مبدأ الحماية
+| Component | Purpose |
+| :--- | :--- |
+| `admin/Header.jsx` | Notifications, user info, logout |
+| `admin/Sidebar.jsx` | Navigation links, mobile toggle |
+| `admin/ActivityLog.jsx` | Admin action history with timestamps |
+| `admin/StatsCard.jsx` | Dashboard statistics cards |
 
-صفحات الإدارة تحتاج التحقق من الجلسة، وبالتالي يتم توجيه المستخدم تلقائياً إلى `/login` إذا لم يكن مسجلاً دخول.
+---
 
-## صفحات الـ blog
+## ⚠️ Troubleshooting
 
-### تحميل المقالات
+**API connection error**
+Verify `NEXT_PUBLIC_API_URL` in `.env.local` and ensure the backend is running on the correct port.
 
-يتم تحميل المقالات من ملفات Markdown باستخدام:
+**`/admin` not loading**
+Ensure the session is valid and `checkSession()` returns `isAuthenticated: true`.
 
-```bash
-src/lib/posts.js
-```
+**Redirect loop on `/login`**
+Verify `AuthContext` is initialized inside `src/app/layout.jsx`.
 
-ويتم التعامل مع:
+---
 
-- العنوان
-- slug
-- excerpt
-- category
-- markdown content
+## 📬 Contact
 
-## التعامل مع الـ API
+Built by **Islam Hadaya**
 
-كل طلبات الـ frontend تمر عبر `fetchAPI` داخل `src/lib/api.js` الذي:
+- Portfolio: [my-profile-personal-nextjs.vercel.app](https://my-profile-personal-nextjs.vercel.app)
+- LinkedIn: [linkedin.com/in/islam-hadaya](https://linkedin.com/in/islam-hadaya)
+- Email: [hdayaaslam34@gmail.com](mailto:hdayaaslam34@gmail.com)
 
-- يضيف `credentials: "include"`
-- يضيف `Content-Type: application/json`
-- يقرأ JSON أو نص الاستجابة
-- يطرح خطأ عند وجود `!res.ok`
+---
 
-## أهم المكونات
-
-### 1) Header
-
-ملف:
-
-```bash
-src/components/admin/Header.jsx
-```
-
-يتضمن:
-
-- الإشعارات
-- مستخدم النظام
-- تسجيل الخروج
-- قائمة الحضور/النشاط
-
-### 2) Sidebar
-
-ملف:
-
-```bash
-src/components/admin/Sidebar.jsx
-```
-
-يتضمن:
-
-- قائمة الروابط الأساسية
-- وضع الجوال (toggle)
-- زر إخفاء/فتح الشريط
-
-### 3) ActivityLog
-
-ملف:
-
-```bash
-src/components/admin/ActivityLog.jsx
-```
-
-يعرض:
-
-- سجل النشاطات
-- مواعيد الأحداث
-- البريد الإلكتروني للمستخدم
-- نوع النشاط
-
-### 4) StatsCard
-
-ملف:
-
-```bash
-src/components/admin/StatsCard.jsx
-```
-
-يعرض:
-
-- عدد الطلبات
-- عدد الخدمات
-- عدد المقالات
-- الطلبات المعلقة
-
-## استكشاف الأخطاء
-
-### 1) خطأ في API URL
-
-إذا ظهر خطأ في الاتصال:
-
-- تأكد من وجود `NEXT_PUBLIC_API_URL` داخل `.env.local`
-- تأكد أن السيرفر يعمل على المنفذ الصحيح
-
-### 2) لا يفتح /admin
-
-تأكد أن:
-
-- الجلسة فعالة
-- `checkSession()` يجيب `isAuthenticated: true`
-- المستخدم مسجل دخولًا في السيرفر
-
-### 3) لا يفتح /login عندما يكون المستخدم مسجل دخول
-
-تأكد أن `AuthContext` قد تم تهيئته داخل `src/app/layout.jsx`.
-
-## معلومات مهمة
-
-- React/Next.js هنا يعمل بشكل RTL مع دعم عربي كامل
-- معظم صفحات الإدارة تعتمد على App Router
-- جميع الطلبات الإدارية تستخدم cookies
-- بعض الخادمات تعرض بيانات تلقائيًا كـ JSON
-
-## الخلاصة
-
-هذا الـ frontend مسؤول عن:
-
-- عرض المحتوى العام والـ blog
-- إدارة لوحة التحكم
-- التعامل مع APIs
-- إدارة حالة المصادقة
-- بناء تجربة مستخدم عربية ومناسبة للموبايل
-
-إذا أردت، يمكنني في الخطوة التالية كتابة مستند إضافي باسم `API_REFERENCE.md` داخل مجلد العميل يوضح كل صفحة، كل route، وكل component بشكل أكثر تفصيلًا.
+*Last Updated: September 2026*
