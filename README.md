@@ -5,7 +5,7 @@
 هذا المشروع هو الواجهة الأمامية لمنصة العمل الحر/الاستشارات، مبني باستخدام Next.js 16 App Router مع React 19. المشروع يدعم:
 
 - صفحة رئيسية للموقع العام
-- صفحة المدونة
+- لا يتضمن الموقع العام صفحات مدونة؛ إدارة المقالات متاحة من لوحة التحكم لدعم موقع المدونة المنفصل.
 - صفحة تسجيل الدخول للإدارة
 - لوحة التحكم للإدارة
 - إدارة الخدمات والطلبات والمقالات
@@ -18,8 +18,6 @@
 - App Router
 - Tailwind CSS
 - react-icons
-- react-markdown
-- gray-matter
 - PostgreSQL via backend API
 
 ## هيكل المشروع
@@ -39,10 +37,6 @@ client/
 │   │   │   └── visitors/
 │   │   ├── api/
 │   │   │   └── visitors/
-│   │   ├── blog/
-│   │   │   ├── page.jsx
-│   │   │   ├── [slug]/page.jsx
-│   │   │   └── category/[category]/page.jsx
 │   │   ├── globals.css
 │   │   ├── layout.jsx
 │   │   ├── login/page.jsx
@@ -63,14 +57,11 @@ client/
 │   │       ├── Services.jsx
 │   │       ├── TrustBar.jsx
 │   │       └── ...
-│   ├── content/
-│   │   └── posts/
 │   ├── context/
 │   │   └── AuthContext.jsx
 │   ├── lib/
 │   │   ├── api.js
-│   │   ├── constants.js
-│   │   └── posts.js
+│   │   └── constants.js
 │   └── app/...
 ├── package.json
 ├── next.config.mjs
@@ -208,21 +199,9 @@ src/context/AuthContext.jsx
 - اختيار الأيقونة من قائمة منسدلة
 - اختيار الفئة من قائمة منسدلة
 
-### 5) المدونة
+### 5) إدارة المقالات
 
-مسارات:
-
-```text
-/blog
-/blog/[slug]
-/blog/category/[category]
-```
-
-تستخدم ملفات Markdown داخل:
-
-```bash
-src/content/posts/
-```
+تتم إدارة المقالات من `/admin/posts`، وتبقى واجهة API متاحة لمشروع المدونة المنفصل. لا توجد صفحات عامة للمقالات ضمن هذا الموقع.
 
 ## مكتبة الـ API في الـ Frontend
 
@@ -282,23 +261,9 @@ src/context/AuthContext.jsx
 
 صفحات الإدارة تحتاج التحقق من الجلسة، وبالتالي يتم توجيه المستخدم تلقائياً إلى `/login` إذا لم يكن مسجلاً دخول.
 
-## صفحات الـ blog
+## إدارة المقالات
 
-### تحميل المقالات
-
-يتم تحميل المقالات من ملفات Markdown باستخدام:
-
-```bash
-src/lib/posts.js
-```
-
-ويتم التعامل مع:
-
-- العنوان
-- slug
-- excerpt
-- category
-- markdown content
+لا توجد صفحات مدونة عامة في واجهة المنصة. تظل إدارة المقالات في لوحة التحكم متصلة بواجهة API لتزويد مشروع المدونة المنفصل بالمحتوى.
 
 ## التعامل مع الـ API
 
@@ -402,7 +367,8 @@ src/components/admin/StatsCard.jsx
 
 هذا الـ frontend مسؤول عن:
 
-- عرض المحتوى العام والـ blog
+- عرض صفحات الموقع العامة
+- إدارة المقالات من لوحة التحكم وتوفيرها لمشروع المدونة المنفصل
 - إدارة لوحة التحكم
 - التعامل مع APIs
 - إدارة حالة المصادقة

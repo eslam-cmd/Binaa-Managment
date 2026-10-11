@@ -17,7 +17,6 @@ import {
 const NAV_LINKS = [
   { label: "خدماتي", href: "#services" },
   { label: "أعمالي", href: "#portfolio" },
-  { label: "المدونة", href: "/blog" },
   { label: "الباقات", href: "#pricing" },
   { label: "الأسئلة الشائعة", href: "#faq" },
 ];

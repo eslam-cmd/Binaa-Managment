@@ -3,13 +3,13 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { FiArrowRight, FiSave, FiX } from "react-icons/fi";
+import { FiArrowRight, FiLoader, FiSave } from "react-icons/fi";
 import { createPost } from "@/lib/api";
 
 export default function NewPostPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState(null);
   const [formData, setFormData] = useState({
     title: "",
     excerpt: "",
@@ -83,6 +83,21 @@ export default function NewPostPage() {
         onSubmit={handleSubmit}
         className="bg-[var(--nav-bg)] border border-[var(--nav-border]) rounded-2xl p-6 space-y-5"
       >
+        <div className="rounded-xl border border-[var(--primary)]/20 bg-[var(--primary)]/5 p-4 text-sm text-[var(--text-muted)]">
+          عند نشر المقالة، سيُنشئ الخادم ويحفظ الترجمات الإنجليزية والألمانية
+          والفارسية والروسية في قاعدة البيانات. لن تُنشر المقالة إذا تعذرت
+          الترجمة؛ يمكنك حفظها كمسودة والمحاولة لاحقاً.
+        </div>
+        {loading && formData.status === "published" && (
+          <div aria-live="polite" className="space-y-2" role="status">
+            <p className="text-sm text-[var(--text-muted)]">
+              جارٍ ترجمة المقالة إلى أربع لغات وحفظها قبل النشر...
+            </p>
+            <div className="h-1.5 overflow-hidden rounded-full bg-[var(--nav-border)]">
+              <div className="h-full w-1/3 animate-pulse rounded-full bg-[var(--primary)]" />
+            </div>
+          </div>
+        )}
         <div>
           <label className="block text-sm font-medium text-[var(--foreground)] mb-1.5">
             العنوان *
@@ -168,8 +183,18 @@ export default function NewPostPage() {
             disabled={loading}
             className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[var(--primary)] text-white text-sm font-medium hover:bg-[var(--primary-hover)] transition-colors disabled:opacity-50"
           >
-            {loading ? "جاري النشر..." : "نشر المقالة"}
-            <FiSave size={16} />
+            {loading
+              ? formData.status === "published"
+                ? "جارٍ الترجمة والنشر..."
+                : "جارٍ حفظ المسودة..."
+              : formData.status === "published"
+                ? "ترجمة المقالة ونشرها"
+                : "حفظ كمسودة"}
+            {loading ? (
+              <FiLoader className="animate-spin" size={16} />
+            ) : (
+              <FiSave size={16} />
+            )}
           </button>
         </div>
       </form>

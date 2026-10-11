@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
 import Link from "next/link";
-import { FiArrowRight, FiSave, FiX, FiLoader } from "react-icons/fi";
+import { FiArrowRight, FiSave, FiLoader } from "react-icons/fi";
 import { getPost, updatePost } from "@/lib/api";
 
 export default function EditPostPage() {
@@ -13,7 +13,9 @@ export default function EditPostPage() {
 
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState(null);
+  const [translationReady, setTranslationReady] = useState(false);
+  const [regenerateTranslations, setRegenerateTranslations] = useState(false);
   const [formData, setFormData] = useState({
     title: "",
     excerpt: "",
@@ -25,28 +27,52 @@ export default function EditPostPage() {
   });
 
   useEffect(() => {
-    fetchPost();
-  }, []);
+    let isActive = true;
 
-  const fetchPost = async () => {
-    try {
-      setLoading(true);
-      const data = await getPost(postId);
-      setFormData({
-        title: data.title || "",
-        excerpt: data.excerpt || "",
-        content: data.content || "",
-        category: data.category || "",
-        tags: data.tags?.join(", ") || "",
-        author: data.author || "إسلام هداية",
-        status: data.status || "published",
-      });
-    } catch (error) {
-      setMessage({ type: "error", text: "حدث خطأ في جلب المقالة" });
-    } finally {
-      setLoading(false);
+    async function loadPost() {
+      try {
+        const data = await getPost(postId);
+        if (!isActive) return;
+
+        setFormData({
+          title: data.title || "",
+          excerpt: data.excerpt || "",
+          content: data.content || "",
+          category: data.category || "",
+          tags: data.tags?.join(", ") || "",
+          author: data.author || "إسلام هداية",
+          status: data.status || "published",
+        });
+        setTranslationReady(
+          ["en", "de", "fa", "ru"].every((locale) => {
+            const translation = data.translations?.[locale];
+            return (
+              typeof translation?.title === "string" &&
+              typeof translation.excerpt === "string" &&
+              typeof translation.content === "string" &&
+              typeof translation.category === "string" &&
+              Array.isArray(translation.tags) &&
+              typeof translation.author === "string"
+            );
+          }),
+        );
+      } catch (error) {
+        if (isActive) {
+          setMessage({
+            type: "error",
+            text: error.message || "حدث خطأ في جلب المقالة",
+          });
+        }
+      } finally {
+        if (isActive) setLoading(false);
+      }
     }
-  };
+
+    void loadPost();
+    return () => {
+      isActive = false;
+    };
+  }, [postId]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -61,6 +87,7 @@ export default function EditPostPage() {
     try {
       const data = {
         ...formData,
+        regenerateTranslations,
         tags: formData.tags
           .split(",")
           .map((t) => t.trim())
@@ -126,6 +153,32 @@ export default function EditPostPage() {
         onSubmit={handleSubmit}
         className="bg-[var(--nav-bg)] border border-[var(--nav-border]) rounded-2xl p-6 space-y-5"
       >
+        <div className="rounded-xl border border-[var(--primary)]/20 bg-[var(--primary)]/5 p-4 text-sm text-[var(--text-muted)]">
+          {translationReady
+            ? "الترجمات الإنجليزية والألمانية والفارسية والروسية محفوظة مع المقالة."
+            : "لا توجد ترجمات كاملة لهذه المقالة بعد. ستُنشأ تلقائياً عند حفظها منشورة."}
+          <label className="mt-3 flex cursor-pointer items-start gap-2">
+            <input
+              checked={regenerateTranslations}
+              onChange={(event) =>
+                setRegenerateTranslations(event.target.checked)
+              }
+              type="checkbox"
+              className="mt-1 accent-[var(--primary)]"
+            />
+            <span>إعادة إنشاء الترجمات حتى إن لم يتغير المحتوى</span>
+          </label>
+        </div>
+        {saving && formData.status === "published" && (
+          <div aria-live="polite" className="space-y-2" role="status">
+            <p className="text-sm text-[var(--text-muted)]">
+              جارٍ تحديث الترجمات المحفوظة قبل إكمال التعديل...
+            </p>
+            <div className="h-1.5 overflow-hidden rounded-full bg-[var(--nav-border)]">
+              <div className="h-full w-1/3 animate-pulse rounded-full bg-[var(--primary)]" />
+            </div>
+          </div>
+        )}
         <div>
           <label className="block text-sm font-medium text-[var(--foreground)] mb-1.5">
             العنوان *
@@ -240,8 +293,16 @@ export default function EditPostPage() {
             disabled={saving}
             className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[var(--primary)] text-white text-sm font-medium hover:bg-[var(--primary-hover)] transition-colors disabled:opacity-50"
           >
-            {saving ? "جاري الحفظ..." : "حفظ التغييرات"}
-            <FiSave size={16} />
+            {saving
+              ? formData.status === "published"
+                ? "جارٍ تحديث المقال والترجمات..."
+                : "جارٍ حفظ التغييرات..."
+              : "حفظ التغييرات"}
+            {saving ? (
+              <FiLoader className="animate-spin" size={16} />
+            ) : (
+              <FiSave size={16} />
+            )}
           </button>
         </div>
       </form>

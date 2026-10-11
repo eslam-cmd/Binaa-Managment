@@ -7,7 +7,6 @@ import {
   FiPlus,
   FiEdit2,
   FiTrash2,
-  FiEye,
   FiRefreshCw,
   FiCalendar,
   FiTag,
@@ -165,13 +164,6 @@ export default function PostsPage() {
                     </td>
                     <td className="p-3.5 align-middle">
                       <div className="flex items-center justify-center gap-2">
-                        <Link
-                          href={`/blog/${post.slug}`}
-                          target="_blank"
-                          className="flex h-8 w-8 items-center justify-center rounded-lg border border-[var(--primary)]/20 bg-[var(--primary)]/10 text-[var(--primary)] transition hover:bg-[var(--primary)]/20"
-                        >
-                          <FiEye size={16} />
-                        </Link>
                         <Link
                           href={`/admin/posts/${post.id}`}
                           className="flex h-8 w-8 items-center justify-center rounded-lg border border-yellow-500/20 bg-yellow-500/10 text-yellow-500 transition hover:bg-yellow-500/20"
