@@ -93,8 +93,14 @@ export default function EditPostPage() {
           .map((t) => t.trim())
           .filter(Boolean),
       };
-      await updatePost(postId, data);
-      setMessage({ type: "success", text: "تم تحديث المقالة بنجاح" });
+      const result = await updatePost(postId, data);
+      setTranslationReady(result.translationsComplete);
+      setMessage({
+        type: "success",
+        text: result.translationsComplete
+          ? "تم حفظ التعديل والترجمات الأربع في قاعدة البيانات."
+          : "تم حفظ التعديل. المقالة غير منشورة ولا توجد ترجمات كاملة لها.",
+      });
       setTimeout(() => router.push("/admin/posts"), 1500);
     } catch (error) {
       setMessage({

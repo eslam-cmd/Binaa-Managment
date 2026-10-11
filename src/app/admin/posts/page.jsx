@@ -8,8 +8,8 @@ import {
   FiEdit2,
   FiTrash2,
   FiRefreshCw,
-  FiCalendar,
-  FiTag,
+  FiCheckCircle,
+  FiAlertCircle,
 } from "react-icons/fi";
 import { getPosts, deletePost } from "@/lib/api";
 
@@ -21,7 +21,26 @@ export default function PostsPage() {
   const [deleteId, setDeleteId] = useState(null);
 
   useEffect(() => {
-    fetchPosts();
+    let isActive = true;
+
+    async function loadPosts() {
+      try {
+        const data = await getPosts();
+        if (isActive) setPosts(data);
+      } catch (error) {
+        console.error("خطأ:", error);
+        if (isActive) {
+          setMessage({ type: "error", text: "حدث خطأ في جلب المقالات" });
+        }
+      } finally {
+        if (isActive) setLoading(false);
+      }
+    }
+
+    void loadPosts();
+    return () => {
+      isActive = false;
+    };
   }, []);
 
   const fetchPosts = async () => {
@@ -118,6 +137,9 @@ export default function PostsPage() {
                   المشاهدات
                 </th>
                 <th className="p-3.5 text-right text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-[0.12em]">
+                  الترجمة
+                </th>
+                <th className="p-3.5 text-right text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-[0.12em]">
                   التاريخ
                 </th>
                 <th className="p-3.5 text-center text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-[0.12em]">
@@ -129,7 +151,7 @@ export default function PostsPage() {
               {posts.length === 0 ? (
                 <tr>
                   <td
-                    colSpan="5"
+                    colSpan="6"
                     className="p-8 text-center text-[var(--text-muted)]"
                   >
                     لا توجد مقالات
@@ -158,6 +180,26 @@ export default function PostsPage() {
                     </td>
                     <td className="p-3.5 align-middle text-sm font-medium text-[var(--foreground)]">
                       {post.views || 0}
+                    </td>
+                    <td className="p-3.5 align-middle">
+                      {post.translationsComplete ? (
+                        <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/20 bg-emerald-500/10 px-2.5 py-1 text-[10px] font-medium text-emerald-400">
+                          <FiCheckCircle size={13} />
+                          مترجم
+                        </span>
+                      ) : post.hasTranslations ? (
+                        <span
+                          className="inline-flex items-center gap-1.5 rounded-full border border-amber-500/20 bg-amber-500/10 px-2.5 py-1 text-[10px] font-medium text-amber-400"
+                          title={`اللغات المتوفرة: ${(post.translatedLanguages || []).join(", ")}`}
+                        >
+                          <FiAlertCircle size={13} />
+                          ترجمة جزئية ({post.translationCount || 0}/4)
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center gap-1.5 rounded-full border border-[var(--nav-border)] px-2.5 py-1 text-[10px] font-medium text-[var(--text-muted)]">
+                          غير مترجم
+                        </span>
+                      )}
                     </td>
                     <td className="p-3.5 align-middle text-sm text-[var(--text-muted)]">
                       {new Date(post.created_at).toLocaleDateString("ar-EG")}

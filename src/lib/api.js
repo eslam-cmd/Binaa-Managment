@@ -91,6 +91,17 @@ export async function createPost(postData) {
     method: "POST",
     body: JSON.stringify(postData),
   });
+
+  if (
+    data.success !== true ||
+    !data.post ||
+    (postData.status === "published" && data.translationsComplete !== true)
+  ) {
+    throw new Error(
+      "لم يؤكد الخادم حفظ المقالة وترجماتها كاملة. تحقق من الاتصال بقاعدة البيانات ثم أعد المحاولة.",
+    );
+  }
+
   return data.post;
 }
 
@@ -99,7 +110,19 @@ export async function updatePost(id, postData) {
     method: "PUT",
     body: JSON.stringify(postData),
   });
-  return data.post;
+
+  if (
+    data.success !== true ||
+    !data.post ||
+    typeof data.translationsComplete !== "boolean" ||
+    (postData.status === "published" && data.translationsComplete !== true)
+  ) {
+    throw new Error(
+      "لم يؤكد الخادم حفظ التعديل والترجمات كاملة. أعد تشغيل/نشر الخادم المحدّث ثم حاول مجدداً.",
+    );
+  }
+
+  return data;
 }
 
 export async function deletePost(id) {
